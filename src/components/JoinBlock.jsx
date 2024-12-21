@@ -17,7 +17,7 @@ function JoinBlock({ onLogin }) {
             userName,
         };
         setIsLoading(true);
-        await axios.post('http://localhost:9999/rooms', obj);
+        await axios.post('/rooms', obj);
         onLogin(obj);
     }
 
