@@ -1,12 +1,13 @@
 import React from 'react';
 import socket from '../socket';
 
-function Chat({ users, messages, userName, roomId, onAddMessage }) {
+function Chat({users, messages, roomId, userName, onAddMessage }) {
   const [messageValue, setMessageValue] = React.useState('');
   const messagesRef = React.useRef(null);
 
   const onSendMessage = () => {
-    socket.emit('ROOM:NEW_MESSAGE', {
+    console.log('Sending message:', messageValue);
+    socket.emit('ROOM:NEW_MESSAGES', {
       userName,
       roomId,
       text: messageValue,
@@ -24,23 +25,23 @@ function Chat({ users, messages, userName, roomId, onAddMessage }) {
       <div className="chat-users">
         Room: <b>{roomId}</b>
         <hr />
-        <b>Online ({users && users.length}):</b>
+        <b>Online ({users.length}):</b>
         <ul>
-          {/* {users.map((name, index) => (
+          {users.map((name, index) => (
             <li key={name + index}>{name}</li>
-          ))} */}
+          ))}
         </ul>
       </div>
       <div className="chat-messages">
         <div ref={messagesRef} className="messages">
-          {/* {messages.map((message) => (
+          {messages.map((message) => (
             <div className="message">
               <p>{message.text}</p>
               <div>
                 <span>{message.userName}</span>
               </div>
             </div>
-          ))} */}
+          ))}
         </div>
         <form>
           <textarea
