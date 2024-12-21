@@ -25,9 +25,3 @@ This project is a simple chat application that allows users to communicate in re
 - **Socket.io** — for implementing real-time WebSocket communication.
 - **Axios** — for handling HTTP requests.
 
-## Installation and Running Locally
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/sklit-dsk/chat-react-node.git
