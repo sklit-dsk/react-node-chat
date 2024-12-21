@@ -1,16 +1,23 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const server = require('http').Server(app);
-app.use(cors());
 
+const PORT = process.env.PORT || 9999; // Используем переменные окружения
+const allowedOrigins = process.env.CORS_ORIGIN || '*'; // CORS для продакшн
+
+app.use(cors({
+    origin: allowedOrigins.split(','),
+    methods: ['GET', 'POST'],
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const io = require('socket.io')(server, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: allowedOrigins.split(','),
         methods: ['GET', 'POST'],
     },
 });
@@ -68,10 +75,25 @@ io.on('connection', (socket) => {
     console.log('User connected', socket.id);
 });
 
-server.listen(9999, (error) => {
+// Раздача статических файлов React
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Обработка всех маршрутов
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+// Обработка ошибок
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
+});
+
+// Запуск сервера
+server.listen(PORT, (error) => {
     if (error) {
         console.error('Error starting server:', error);
         throw Error(error);
     }
-    console.log('Server is running on port 9999');
+    console.log(`Server is running on port ${PORT}`);
 });
